@@ -27,7 +27,6 @@ import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.client.Client;
@@ -49,7 +48,6 @@ import io.fabric8.docker.api.model.AuthConfig;
 import io.fabric8.docker.client.ConfigBuilder;
 import io.fabric8.docker.client.DefaultDockerClient;
 import io.fabric8.docker.client.DockerClient;
-import io.fabric8.docker.dsl.EventListener;
 
 /**
  * @author Harald Wellmann
@@ -57,7 +55,7 @@ import io.fabric8.docker.dsl.EventListener;
  */
 public class PushAndDeleteIT {
 
-    private static Logger log = LoggerFactory.getLogger(UploadIT.class);
+    static Logger log = LoggerFactory.getLogger(UploadIT.class);
 
     // Note the use of 127.0.0.1 instead of localhost.
     // With localhost, dockerd on MacOS tries to use https.
@@ -96,37 +94,6 @@ public class PushAndDeleteIT {
         dockerClient.close();
     }
 
-    public static class MyEventListener implements EventListener {
-
-        private CountDownLatch latch = new CountDownLatch(1);
-
-        @Override
-        public void onSuccess(String message) {
-            log.debug(message);
-            latch.countDown();
-        }
-
-        @Override
-        public void onError(String message) {
-            log.error(message);
-            latch.countDown();
-        }
-
-        @Override
-        public void onEvent(String event) {
-            log.debug(event);
-        }
-
-        public void await() {
-            try {
-                latch.await();
-                latch = new CountDownLatch(1);
-            } catch (InterruptedException exc) {
-                log.error("Interrupted", exc);
-            }
-        }
-    }
-
     @Test
     public void copyImages() throws InterruptedException, IOException {
         assertThat(getRepositories(), is(empty()));
@@ -157,7 +124,7 @@ public class PushAndDeleteIT {
     }
 
     public void copyImage(String repository, String tag, String registry) {
-        MyEventListener listener = new MyEventListener();
+        DockerClientListener listener = new DockerClientListener();
         dockerClient.image().withName(repository).pull().usingListener(listener).withTag(tag).fromRegistry();
         listener.await();
 
