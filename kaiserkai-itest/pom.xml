@@ -23,9 +23,21 @@
         </dependency>
 
         <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson2-provider</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>io.fabric8</groupId>
             <artifactId>docker-client</artifactId>
             <scope>test</scope>
+	    <exclusions>
+	      <exclusion>
+		<groupId>com.sun</groupId>
+		<artifactId>tools</artifactId>
+	      </exclusion>
+	    </exclusions>
         </dependency>
 
         <dependency>
@@ -143,3 +155,4 @@
         </plugins>
     </build>
 </project>
+
