@@ -22,6 +22,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 
 import org.jboss.resteasy.client.jaxrs.BasicAuthentication;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
@@ -62,33 +63,43 @@ public class UploadIT {
     }
 
     @Test
-    public void shouldUploadBlob() {
+    public void shouldUploadBlob() throws IOException {
 
         log.debug("POST");
         WebTarget target = entryPoint.path("foobar").path("blobs/uploads/");
         Response response = target.request().post(null);
         assertThat(response.getStatusInfo(), is(ACCEPTED));
 
-        String location = response.getHeaderString("Location");
+        String uploadLocation = response.getHeaderString("Location");
         response.close();
 
         log.debug("GET");
-        Response getResponse = client.target(location).request().get();
+        Response getResponse = client.target(uploadLocation).request().get();
         assertThat(getResponse.getStatusInfo(), is(NO_CONTENT));
 
         log.debug("PUT");
         File file = new File(LOCAL_JAR);
+        byte[] content = Files.readAllBytes(file.toPath());
         String digest = computeDigest(file);
-        WebTarget putTarget = client.target(location).queryParam("digest", digest);
+        WebTarget putTarget = client.target(uploadLocation).queryParam("digest", digest);
         Response putResponse = putTarget.request().
                 header("Content-Range", "0-" + file.length()).
                 put(Entity.entity(file, MediaType.APPLICATION_OCTET_STREAM_TYPE));
         assertThat(putResponse.getStatusInfo(), is(CREATED));
 
-        log.debug("GET");
-        getResponse = client.target(location).request().get();
-        log.debug("Body = {}", getResponse.readEntity(String.class));
+        String blobLocation = putResponse.getHeaderString("Location");
+        assertThat(blobLocation, is(UriBuilder.fromUri(REGISTRY_URL).path("v2/foobar/blobs").path(digest).build().toString()));
 
+        log.debug("GET upload");
+        getResponse = client.target(uploadLocation).request().get();
+        assertThat(getResponse.getStatusInfo(), is(NOT_FOUND));
+
+        log.debug("GET blob");
+        getResponse = client.target(blobLocation).request().get();
+        assertThat(getResponse.getStatusInfo(), is(OK));
+
+        byte[] responseChunk = getResponse.readEntity(byte[].class);
+        assertThat(responseChunk, is(content));
     }
 
     @Test
@@ -115,9 +126,6 @@ public class UploadIT {
     }
 
 
-
-
-
     @Test
     public void shouldUploadBlobInChunks() throws IOException {
 
@@ -126,7 +134,7 @@ public class UploadIT {
         Response response = target.request().post(null);
         assertThat(response.getStatusInfo(), is(ACCEPTED));
 
-        String location = response.getHeaderString(HttpHeaders.LOCATION);
+        String uploadLocation = response.getHeaderString(HttpHeaders.LOCATION);
 
         File file = new File(LOCAL_JAR);
         int length = (int) file.length();
@@ -143,22 +151,32 @@ public class UploadIT {
             byte[] chunk = Arrays.copyOfRange(content, from, to);
 
             log.debug("PATCH");
-            WebTarget putTarget = client.target(location);
+            WebTarget putTarget = client.target(uploadLocation);
             response = putTarget.request().
                     header("Content-Range", from + "-" + (to-1)).
                     method("PATCH", Entity.entity(chunk, MediaType.APPLICATION_OCTET_STREAM_TYPE));
             assertThat(response.getStatusInfo(), is(ACCEPTED));
-            location = response.getHeaderString("Location");
+            uploadLocation = response.getHeaderString("Location");
             numBytes += CHUNK_SIZE;
         }
 
 
         log.debug("PUT");
         String digest = computeDigest(file);
-        WebTarget putTarget = client.target(location).queryParam("digest", digest);
+        WebTarget putTarget = client.target(uploadLocation).queryParam("digest", digest);
         response = putTarget.request().
                 put(null);
         assertThat(response.getStatusInfo(), is(CREATED));
+
+
+        String blobLocation = response.getHeaderString("Location");
+        assertThat(blobLocation, is(UriBuilder.fromUri(REGISTRY_URL).path("v2/foobar/blobs").path(digest).build().toString()));
+
+        log.debug("GET upload");
+        response = client.target(uploadLocation).request().get();
+        assertThat(response.getStatusInfo(), is(NOT_FOUND));
+
+
 
 
         log.debug("HEAD blob");
@@ -168,12 +186,12 @@ public class UploadIT {
 
         log.debug("GET blob range");
         target = entryPoint.path("foobar").path("blobs").path(digest);
-        response = target.request().header("Range", "bytes=100000-199999").get();
+        response = target.request().header("Range", "bytes=50000-149999").get();
         assertThat(response.getStatusInfo(), is(PARTIAL_CONTENT));
         assertThat(response.getHeaderString(HttpHeaders.CONTENT_LENGTH), is("100000"));
-        assertThat(response.getHeaderString("Content-Range"), is("bytes 100000-199999/314932"));
+        assertThat(response.getHeaderString("Content-Range"), is("bytes 50000-149999/314932"));
         byte[] responseChunk = response.readEntity(byte[].class);
         assertThat(responseChunk.length, is(CHUNK_SIZE));
-        assertThat(responseChunk, is(Arrays.copyOfRange(content, 100000, 200000)));
+        assertThat(responseChunk, is(Arrays.copyOfRange(content, 50_000, 150_000)));
     }
 }

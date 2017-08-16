@@ -47,7 +47,7 @@ public class FileOperations {
                 .map(java.nio.file.Path::toFile)
                 .forEach(File::delete);
         } catch (IOException exc) {
-            log.error("Error deleting directory " + dir, exc);
+            log.error("Error deleting directory {}", dir, exc);
         }
     }
 
@@ -66,7 +66,7 @@ public class FileOperations {
             try {
                 return Optional.of(Files.readAllLines(link.toPath()).get(0));
             } catch (IOException exc) {
-                log.debug("Error reading timestamp file " + link, exc);
+                log.debug("Error reading timestamp file {}", link, exc);
             }
         }
         return Optional.empty();
@@ -95,9 +95,9 @@ public class FileOperations {
                 Instant started = Instant.parse(timestamp);
                 return Optional.of(started);
             } catch (IOException exc) {
-                log.debug("Error reading timestamp file " + timestampFile, exc);
+                log.debug("Error reading timestamp file {}", timestampFile, exc);
             } catch (DateTimeParseException exc) {
-                log.debug("Invalid timestamp file in " + timestampDir, exc);
+                log.debug("Invalid timestamp file in {}", timestampDir, exc);
             }
         }
         return Optional.empty();
