@@ -29,6 +29,8 @@ import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.ops4j.kaiserkai.core.api.model.GarbageCollectionResult;
+import org.ops4j.kaiserkai.core.api.model.JobStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,12 +102,22 @@ public class PushAndDeleteIT {
         registryClient.deleteTag("postgres", "9.6.4");
         assertThat(getTags("postgres"), is(empty()));
 
-        registryClient.collectGarbage();
-        TimeUnit.SECONDS.sleep(10);
+        String jobId = registryClient.collectGarbage();
+        JobStatus status = JobStatus.RUNNING;
+        while (status == JobStatus.RUNNING) {
+            GarbageCollectionResult result = registryClient.getGarbageCollectionResult(jobId);
+            status = result.getStatus();
+            log.info("job {} is {}", jobId, status);
+            if (status == JobStatus.RUNNING) {
+                TimeUnit.SECONDS.sleep(1);
+            }
+        }
+
         assertThat(getRepositories(), is(empty()));
     }
 
     public void copyImage(String repository, String tag, String registry) {
+        log.info("copying image {}:{}", repository, tag);
         DockerClientListener listener = new DockerClientListener();
         dockerClient.image().withName(repository).pull().usingListener(listener).withTag(tag).fromRegistry();
         listener.await();

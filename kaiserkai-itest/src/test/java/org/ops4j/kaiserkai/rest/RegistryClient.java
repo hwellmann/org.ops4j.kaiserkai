@@ -27,9 +27,11 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.jboss.resteasy.client.jaxrs.BasicAuthentication;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.ops4j.kaiserkai.core.api.model.GarbageCollectionResult;
 import org.ops4j.kaiserkai.rest.model.Catalog;
 import org.ops4j.kaiserkai.rest.model.Tags;
 
@@ -71,7 +73,18 @@ public class RegistryClient {
         response = entryPoint.path(repository).path("manifests").path(digest).request().delete();
     }
 
-    public void collectGarbage() {
-        entryPoint.path("_gc").request().post(null);
+    public String collectGarbage() {
+        Response response = entryPoint.path("_gc").request().post(null);
+        String path = response.getLocation().getPath();
+        int slash = path.lastIndexOf('/');
+        return path.substring(slash + 1);
+    }
+
+    public GarbageCollectionResult getGarbageCollectionResult(String jobId) {
+        Response response = entryPoint.path("_gc").path(jobId).request().get();
+        if (! response.getStatusInfo().equals(Status.OK)) {
+            return null;
+        }
+        return response.readEntity(GarbageCollectionResult.class);
     }
 }

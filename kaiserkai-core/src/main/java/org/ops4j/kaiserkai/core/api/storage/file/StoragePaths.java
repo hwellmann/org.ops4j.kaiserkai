@@ -50,6 +50,10 @@ public class StoragePaths {
         return new File(blobsSubdir, digest.getChecksum());
     }
 
+    public File getJobsDir() {
+        return new File(getVersionDir(), "jobs");
+    }
+
     public File getRepositoriesDir() {
         return new File(getVersionDir(), "repositories");
     }

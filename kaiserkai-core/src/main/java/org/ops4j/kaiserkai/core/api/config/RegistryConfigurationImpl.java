@@ -44,7 +44,7 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
     @PostConstruct
     void init() {
         if (registryRoot == null) {
-            registryRoot = home + "/docker-registry-java";
+            registryRoot = home + "/kaiserkai";
         }
 
     }
@@ -92,6 +92,4 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
     public String getAdminDigest() {
         return adminDigest;
     }
-
-
 }

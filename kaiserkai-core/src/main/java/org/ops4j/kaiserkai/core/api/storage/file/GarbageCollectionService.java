@@ -33,6 +33,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.ops4j.kaiserkai.core.api.lock.LockManager;
+import org.ops4j.kaiserkai.core.api.model.Blob;
+import org.ops4j.kaiserkai.core.api.model.GarbageCollectionResult;
+import org.ops4j.kaiserkai.core.api.model.JobStatus;
 import org.ops4j.kaiserkai.core.api.model.Layer;
 import org.ops4j.kaiserkai.core.api.model.Manifest;
 import org.slf4j.Logger;
@@ -59,6 +62,7 @@ public class GarbageCollectionService {
     @Inject
     private StoragePaths paths;
 
+
     /**
      * Maps blob digests to repository tags.
      * <p>
@@ -70,17 +74,62 @@ public class GarbageCollectionService {
         private static final long serialVersionUID = 1L;
     }
 
-    public void collectGarbage() {
+    public GarbageCollectionResult collectGarbage(String jobId) {
         try {
             BlobToManifestMap blobToManifestMap = findAllBlobs();
             markReferencedBlobs(blobToManifestMap);
             deleteUnusedBlobs(blobToManifestMap);
             removeUnusedLayers(blobToManifestMap);
             removeStaleUploads();
+            GarbageCollectionResult result = buildGarbageCollectionResult(jobId, blobToManifestMap);
+            storeJobResult(result);
             log.info("Garbage collection completed");
+            return result;
         } finally {
             lockManager.unlock();
         }
+    }
+
+    private GarbageCollectionResult buildGarbageCollectionResult(String jobId, BlobToManifestMap blobToManifestMap) {
+        GarbageCollectionResult result = new GarbageCollectionResult();
+        result.setId(jobId);
+        result.setStatus(JobStatus.COMPLETED);
+        blobToManifestMap.forEach((digest, manifest) -> {
+            if (manifest.equals(UNUSED)) {
+                Blob blob = new Blob();
+                blob.setDigest(digest);
+                result.getBlobs().add(blob);
+            }
+        });
+        return result;
+    }
+
+    private void storeJobResult(GarbageCollectionResult result) {
+        File jobsDir = paths.getJobsDir();
+        jobsDir.mkdirs();
+        File jobResult = new File(jobsDir, result.getId());
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            objectMapper.writerFor(GarbageCollectionResult.class).writeValue(jobResult, result);
+        } catch (IOException exc) {
+            log.error("Error writing job result", exc);
+        }
+    }
+
+    public GarbageCollectionResult readJobResult(String uuid) {
+        File jobsDir = paths.getJobsDir();
+        File jobResult = new File(jobsDir, uuid);
+        if (!jobResult.exists()) {
+            return null;
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readerFor(GarbageCollectionResult.class).readValue(jobResult);
+        } catch (IOException exc) {
+            log.error("Error writing job result", exc);
+        }
+        return null;
     }
 
     /**
