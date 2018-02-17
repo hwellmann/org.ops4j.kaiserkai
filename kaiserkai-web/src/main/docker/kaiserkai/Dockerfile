@@ -1,9 +1,9 @@
-FROM piegsaj/wildfly:10.1.0.Final
+FROM jboss/wildfly:11.0.0.Final
 LABEL maintainer="Harald Wellmann <harald.wellmann@gmx.de>"
 
 # deploy the WAR from the Maven build
-ADD maven/war/kaiserkai-web.war /opt/wildfly/standalone/deployments/kaiserkai-web.war
+ADD maven/war/kaiserkai-web.war /opt/jboss/wildfly/standalone/deployments/kaiserkai-web.war
 
-VOLUME /opt/wildfly/kaiserkai
+VOLUME /opt/jboss/wildfly/kaiserkai
 
 

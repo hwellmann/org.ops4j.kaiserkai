@@ -8,13 +8,14 @@
     </parent>
     <artifactId>kaiserkai-web</artifactId>
     <packaging>war</packaging>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.ops4j.kaiserkai</groupId>
             <artifactId>kaiserkai-rest-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -24,6 +25,26 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.wildfly.swarm</groupId>
+                <artifactId>wildfly-swarm-plugin</artifactId>
+                <version>${org.wildfly.swarm.version}</version>
+                <configuration>
+                    <fractions>cdi,jaxrs</fractions>
+                    <hollow>true</hollow>
+                    <properties>
+                        <swarm.undertow.servers.default-server.http-listeners.default.max-post-size>99000000</swarm.undertow.servers.default-server.http-listeners.default.max-post-size>
+                    </properties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>package</id>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>io.fabric8</groupId>
@@ -44,6 +65,31 @@
                                             <outputDirectory>war</outputDirectory>
                                             <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
                                         </dependencySet>
+                                    </inline>
+                                </assembly>
+                                <nocache>true</nocache>
+                            </build>
+                        </image>
+                        <image>
+                            <alias>kaiserkai-swarm</alias>
+                            <name>ops4j/kaiserkai-swarm:%v</name>
+                            <build>
+                                <dockerFileDir>kaiserkai-swarm</dockerFileDir>
+                                <assembly>
+                                    <inline xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2">
+                                        <dependencySet>
+                                            <useProjectArtifact>true</useProjectArtifact>
+                                            <useTransitiveDependencies>false</useTransitiveDependencies>
+                                            <outputDirectory>war</outputDirectory>
+                                            <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+                                        </dependencySet>
+                                        <files>
+                                            <file>
+                                                <source>${project.build.directory}/kaiserkai-web-${project.version}-hollow-swarm.jar</source>
+                                                <outputDirectory>war</outputDirectory>
+                                                <destName>kaiserkai-hollow-swarm.jar</destName>
+                                            </file>
+                                        </files>
                                     </inline>
                                 </assembly>
                                 <nocache>true</nocache>

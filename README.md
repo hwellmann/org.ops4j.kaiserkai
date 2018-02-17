@@ -7,7 +7,7 @@ Kaiserkai is a Java implementation of the [Docker Registry V2 API](https://docs.
 
 Its filesystem storage layout is compatible with the one used by Docker's `registry:2`.
 
-The project uses WildFly 10 and fabric8's `docker-maven-plugin` and `docker-client` library.
+The project uses WildFly 11 and fabric8's `docker-maven-plugin` and `docker-client` library.
 
 ## Why bother?
 
