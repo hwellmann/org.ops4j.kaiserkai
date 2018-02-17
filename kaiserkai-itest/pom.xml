@@ -32,12 +32,12 @@
             <groupId>io.fabric8</groupId>
             <artifactId>docker-client</artifactId>
             <scope>test</scope>
-	    <exclusions>
-	      <exclusion>
-		<groupId>com.sun</groupId>
-		<artifactId>tools</artifactId>
-	      </exclusion>
-	    </exclusions>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun</groupId>
+                    <artifactId>tools</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -86,55 +86,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <configuration>
-                    <removeVolumes>true</removeVolumes>
-                    <images>
-                        <image>
-                            <alias>kaiserkai</alias>
-                            <name>ops4j/kaiserkai:%v</name>
-                            <run>
-                                <ports>
-                                    <port>kaiserkai.http.port:8080</port>
-                                </ports>
-                                <volumes>
-                                    <bind>
-                                        <volume>${project.basedir}/src/test/resources/max-post-size.sh:/opt/wildfly/bin/max-post-size.sh</volume>
-                                    </bind>
-                                </volumes>
-                                <wait>
-                                    <http>
-                                        <url>http://localhost:${kaiserkai.http.port}/v2/</url>
-                                        <status>401</status>
-                                    </http>
-                                    <time>60000</time>
-                                    <exec>
-                                        <postStart>/opt/wildfly/bin/max-post-size.sh</postStart>
-                                    </exec>
-                                </wait>
-                            </run>
-                        </image>
-                    </images>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>start</id>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                        <phase>pre-integration-test</phase>
-                    </execution>
-                    <execution>
-                        <id>stop</id>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                        <phase>post-integration-test</phase>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
@@ -154,5 +105,114 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <configuration>
+                            <removeVolumes>true</removeVolumes>
+                            <images>
+                                <image>
+                                    <alias>kaiserkai</alias>
+                                    <name>ops4j/kaiserkai:%v</name>
+                                    <run>
+                                        <ports>
+                                            <port>kaiserkai.http.port:8080</port>
+                                        </ports>
+                                        <volumes>
+                                            <bind>
+                                                <volume>${project.basedir}/src/test/resources/max-post-size.sh:/opt/jboss/wildfly/bin/max-post-size.sh</volume>
+                                            </bind>
+                                        </volumes>
+                                        <wait>
+                                            <http>
+                                                <url>http://localhost:${kaiserkai.http.port}/v2/</url>
+                                                <status>401</status>
+                                            </http>
+                                            <time>60000</time>
+                                            <exec>
+                                                <postStart>/opt/jboss/wildfly/bin/max-post-size.sh</postStart>
+                                            </exec>
+                                        </wait>
+                                    </run>
+                                </image>
+                            </images>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start</id>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                                <phase>pre-integration-test</phase>
+                            </execution>
+                            <execution>
+                                <id>stop</id>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                                <phase>post-integration-test</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>swarm</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <configuration>
+                            <removeVolumes>true</removeVolumes>
+                            <images>
+                                <image>
+                                    <alias>kaiserkai</alias>
+                                    <name>ops4j/kaiserkai-swarm:%v</name>
+                                    <run>
+                                        <ports>
+                                            <port>kaiserkai.http.port:8080</port>
+                                        </ports>
+                                        <wait>
+                                            <http>
+                                                <url>http://localhost:${kaiserkai.http.port}/v2/</url>
+                                                <status>401</status>
+                                            </http>
+                                            <time>60000</time>
+                                        </wait>
+                                    </run>
+                                </image>
+                            </images>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start</id>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                                <phase>pre-integration-test</phase>
+                            </execution>
+                            <execution>
+                                <id>stop</id>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                                <phase>post-integration-test</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
 

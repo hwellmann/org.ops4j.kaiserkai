@@ -19,27 +19,32 @@ package org.ops4j.kaiserkai.rest;
 
 import java.util.concurrent.CountDownLatch;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.fabric8.docker.dsl.EventListener;
 
 public class DockerClientListener implements EventListener {
+
+    private static Logger log = LoggerFactory.getLogger(DockerClientListener.class);
 
     private CountDownLatch latch = new CountDownLatch(1);
 
     @Override
     public void onSuccess(String message) {
-        PushAndDeleteIT.log.debug(message);
+        log.debug(message);
         latch.countDown();
     }
 
     @Override
     public void onError(String message) {
-        PushAndDeleteIT.log.error(message);
+        log.error(message);
         latch.countDown();
     }
 
     @Override
     public void onEvent(String event) {
-        PushAndDeleteIT.log.debug(event);
+        log.debug(event);
     }
 
     public void await() {
@@ -47,7 +52,7 @@ public class DockerClientListener implements EventListener {
             latch.await();
             latch = new CountDownLatch(1);
         } catch (InterruptedException exc) {
-            PushAndDeleteIT.log.error("Interrupted", exc);
+            log.error("Interrupted", exc);
         }
     }
 }

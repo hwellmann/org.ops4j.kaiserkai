@@ -45,7 +45,7 @@ import io.fabric8.docker.client.DockerClient;
  */
 public class PushAndDeleteIT {
 
-    static Logger log = LoggerFactory.getLogger(UploadIT.class);
+    private static Logger log = LoggerFactory.getLogger(PushAndDeleteIT.class);
 
     // Note the use of 127.0.0.1 instead of localhost.
     // With localhost, dockerd on MacOS tries to use https.
