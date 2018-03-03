@@ -22,7 +22,7 @@ public class SimpleIdentityStore implements IdentityStore {
 
     public CredentialValidationResult validate(UsernamePasswordCredential credential) {
         String user = credential.getCaller();
-        String password = credential.getPasswordAsString();
+        char[] password = credential.getPassword().getValue();
         if (matchesDigest(user, password, config.getOperatorDigest())) {
             return new CredentialValidationResult(user, new HashSet<>(Arrays.asList("USER")));
         }
@@ -32,8 +32,16 @@ public class SimpleIdentityStore implements IdentityStore {
         return INVALID_RESULT;
     }
 
-    private boolean matchesDigest(String user, String password, String digest) {
-        String actualDigest = DigestBuilder.computeDigest(String.format("%s:%s", user, password));
+    private boolean matchesDigest(String user, char[] password, String digest) {
+        String actualDigest = DigestBuilder.computeDigest(concatenate(user, password));
         return actualDigest.equals(digest);
+    }
+
+    private char[] concatenate(String user, char[] password) {
+        char[] charArray = new char[user.length() + password.length + 1];
+        System.arraycopy(user.toCharArray(), 0, charArray, 0, user.length());
+        charArray[user.length()] = ':';
+        System.arraycopy(password, 0, charArray, user.length() + 1, password.length);
+        return charArray;
     }
 }

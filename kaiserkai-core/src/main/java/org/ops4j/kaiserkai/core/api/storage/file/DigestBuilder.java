@@ -5,9 +5,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -25,6 +28,21 @@ public class DigestBuilder {
         InputStream is = new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8));
         return computeDigest(is);
     }
+
+    public static String computeDigest(char[] text) {
+        InputStream is = new ByteArrayInputStream(toBytes(text));
+        return computeDigest(is);
+    }
+
+    private static byte[] toBytes(char[] chars) {
+        CharBuffer charBuffer = CharBuffer.wrap(chars);
+        ByteBuffer byteBuffer = StandardCharsets.UTF_8.encode(charBuffer);
+        byte[] bytes = Arrays.copyOfRange(byteBuffer.array(), byteBuffer.position(), byteBuffer.limit());
+        Arrays.fill(charBuffer.array(), '\u0000');
+        Arrays.fill(byteBuffer.array(), (byte) 0);
+        return bytes;
+    }
+
 
     private static String computeDigest(InputStream fis) {
         try {
