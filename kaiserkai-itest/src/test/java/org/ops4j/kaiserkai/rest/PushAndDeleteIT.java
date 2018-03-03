@@ -17,18 +17,16 @@
  */
 package org.ops4j.kaiserkai.rest;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.ops4j.kaiserkai.core.api.model.GarbageCollectionResult;
 import org.ops4j.kaiserkai.core.api.model.JobStatus;
 import org.slf4j.Logger;
@@ -57,7 +55,7 @@ public class PushAndDeleteIT {
 
     private RegistryClient registryClient;
 
-    @Before
+    @BeforeEach
     public void before() {
         ConfigBuilder configBuilder = new ConfigBuilder();
         AuthConfig authConfig = new AuthConfig();
@@ -72,35 +70,35 @@ public class PushAndDeleteIT {
         registryClient = new RegistryClient(REGISTRY_URL, "admin", "admin");
     }
 
-    @After
+    @AfterEach
     public void after() throws IOException {
         dockerClient.close();
     }
 
     @Test
     public void copyImages() throws InterruptedException, IOException {
-        assertThat(getRepositories(), is(empty()));
+        assertThat(getRepositories()).isEmpty();
 
         copyImage("postgres", "9.6.2", REGISTRY);
-        assertThat(getRepositories(), contains("postgres"));
-        assertThat(getTags("postgres"), contains("9.6.2"));
+        assertThat(getRepositories()).contains("postgres");
+        assertThat(getTags("postgres")).contains("9.6.2");
 
         copyImage("postgres", "9.6.3", REGISTRY);
-        assertThat(getRepositories(), contains("postgres"));
-        assertThat(getTags("postgres"), contains("9.6.2", "9.6.3"));
+        assertThat(getRepositories()).contains("postgres");
+        assertThat(getTags("postgres")).contains("9.6.2", "9.6.3");
 
         copyImage("postgres", "9.6.4", REGISTRY);
-        assertThat(getRepositories(), contains("postgres"));
-        assertThat(getTags("postgres"), contains("9.6.2", "9.6.3", "9.6.4"));
+        assertThat(getRepositories()).contains("postgres");
+        assertThat(getTags("postgres")).contains("9.6.2", "9.6.3", "9.6.4");
 
         registryClient.deleteTag("postgres", "9.6.2");
-        assertThat(getTags("postgres"), contains("9.6.3", "9.6.4"));
+        assertThat(getTags("postgres")).contains("9.6.3", "9.6.4");
 
         registryClient.deleteTag("postgres", "9.6.3");
-        assertThat(getTags("postgres"), contains("9.6.4"));
+        assertThat(getTags("postgres")).contains("9.6.4");
 
         registryClient.deleteTag("postgres", "9.6.4");
-        assertThat(getTags("postgres"), is(empty()));
+        assertThat(getTags("postgres")).isEmpty();
 
         String jobId = registryClient.collectGarbage();
         JobStatus status = JobStatus.RUNNING;
@@ -113,7 +111,7 @@ public class PushAndDeleteIT {
             }
         }
 
-        assertThat(getRepositories(), is(empty()));
+        assertThat(getRepositories()).isEmpty();;
     }
 
     public void copyImage(String repository, String tag, String registry) {

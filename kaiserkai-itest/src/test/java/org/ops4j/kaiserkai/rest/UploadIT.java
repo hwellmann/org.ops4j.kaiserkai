@@ -6,8 +6,7 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
 import static javax.ws.rs.core.Response.Status.PARTIAL_CONTENT;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.ops4j.kaiserkai.core.api.storage.file.DigestBuilder.computeDigest;
 
 import java.io.File;
@@ -26,9 +25,9 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.jboss.resteasy.client.jaxrs.BasicAuthentication;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +35,7 @@ public class UploadIT {
 
     private static Logger log = LoggerFactory.getLogger(UploadIT.class);
 
-    private static final String LOCAL_JAR = Paths.get(System.getProperty("user.dir"), "target", "dependency", "junit-4.12.jar").toString();
+    private static final String LOCAL_JAR = Paths.get(System.getProperty("user.dir"), "target", "dependency", "logback-classic-1.0.7.jar").toString();
 
     private static final String REGISTRY_URL = "http://localhost:" + System.getProperty("kaiserkai.http.port", "8080");
 
@@ -46,7 +45,7 @@ public class UploadIT {
 
     private WebTarget entryPoint;
 
-    @Before
+    @BeforeEach
     public void init() {
         log.debug("registry URL = {}", REGISTRY_URL);
 
@@ -57,7 +56,7 @@ public class UploadIT {
         entryPoint = client.target(REGISTRY_URL).path("v2");
     }
 
-    @After
+    @AfterEach
     public void after() {
         client.close();
     }
@@ -68,14 +67,14 @@ public class UploadIT {
         log.debug("POST");
         WebTarget target = entryPoint.path("foobar").path("blobs/uploads/");
         Response response = target.request().post(null);
-        assertThat(response.getStatusInfo(), is(ACCEPTED));
+        assertThat(response.getStatusInfo()).isEqualTo(ACCEPTED);
 
         String uploadLocation = response.getHeaderString("Location");
         response.close();
 
         log.debug("GET");
         Response getResponse = client.target(uploadLocation).request().get();
-        assertThat(getResponse.getStatusInfo(), is(NO_CONTENT));
+        assertThat(getResponse.getStatusInfo()).isEqualTo(NO_CONTENT);
 
         log.debug("PUT");
         File file = new File(LOCAL_JAR);
@@ -85,21 +84,21 @@ public class UploadIT {
         Response putResponse = putTarget.request().
                 header("Content-Range", "0-" + file.length()).
                 put(Entity.entity(file, MediaType.APPLICATION_OCTET_STREAM_TYPE));
-        assertThat(putResponse.getStatusInfo(), is(CREATED));
+        assertThat(putResponse.getStatusInfo()).isEqualTo(CREATED);
 
         String blobLocation = putResponse.getHeaderString("Location");
-        assertThat(blobLocation, is(UriBuilder.fromUri(REGISTRY_URL).path("v2/foobar/blobs").path(digest).build().toString()));
+        assertThat(blobLocation).isEqualTo(UriBuilder.fromUri(REGISTRY_URL).path("v2/foobar/blobs").path(digest).build().toString());
 
         log.debug("GET upload");
         getResponse = client.target(uploadLocation).request().get();
-        assertThat(getResponse.getStatusInfo(), is(NOT_FOUND));
+        assertThat(getResponse.getStatusInfo()).isEqualTo(NOT_FOUND);
 
         log.debug("GET blob");
         getResponse = client.target(blobLocation).request().get();
-        assertThat(getResponse.getStatusInfo(), is(OK));
+        assertThat(getResponse.getStatusInfo()).isEqualTo(OK);
 
         byte[] responseChunk = getResponse.readEntity(byte[].class);
-        assertThat(responseChunk, is(content));
+        assertThat(responseChunk).isEqualTo(content);
     }
 
     @Test
@@ -108,21 +107,21 @@ public class UploadIT {
         log.debug("POST");
         WebTarget target = entryPoint.path("foobar").path("blobs/uploads/");
         Response response = target.request().post(null);
-        assertThat(response.getStatusInfo(), is(ACCEPTED));
+        assertThat(response.getStatusInfo()).isEqualTo(ACCEPTED);
 
         String location = response.getHeaderString("Location");
 
         log.debug("HEAD");
         response = client.target(location).request().head();
-        assertThat(response.getStatusInfo(), is(NO_CONTENT));
+        assertThat(response.getStatusInfo()).isEqualTo(NO_CONTENT);
 
         log.debug("DELETE");
         response = client.target(location).request().delete();
-        assertThat(response.getStatusInfo(), is(NO_CONTENT));
+        assertThat(response.getStatusInfo()).isEqualTo(NO_CONTENT);
 
         log.debug("HEAD");
         response = client.target(location).request().head();
-        assertThat(response.getStatusInfo(), is(NOT_FOUND));
+        assertThat(response.getStatusInfo()).isEqualTo(NOT_FOUND);
     }
 
 
@@ -132,7 +131,7 @@ public class UploadIT {
         log.debug("POST");
         WebTarget target = entryPoint.path("foobar").path("blobs/uploads/");
         Response response = target.request().post(null);
-        assertThat(response.getStatusInfo(), is(ACCEPTED));
+        assertThat(response.getStatusInfo()).isEqualTo(ACCEPTED);
 
         String uploadLocation = response.getHeaderString(HttpHeaders.LOCATION);
 
@@ -155,7 +154,7 @@ public class UploadIT {
             response = putTarget.request().
                     header("Content-Range", from + "-" + (to-1)).
                     method("PATCH", Entity.entity(chunk, MediaType.APPLICATION_OCTET_STREAM_TYPE));
-            assertThat(response.getStatusInfo(), is(ACCEPTED));
+            assertThat(response.getStatusInfo()).isEqualTo(ACCEPTED);
             uploadLocation = response.getHeaderString("Location");
             numBytes += CHUNK_SIZE;
         }
@@ -166,15 +165,15 @@ public class UploadIT {
         WebTarget putTarget = client.target(uploadLocation).queryParam("digest", digest);
         response = putTarget.request().
                 put(null);
-        assertThat(response.getStatusInfo(), is(CREATED));
+        assertThat(response.getStatusInfo()).isEqualTo(CREATED);
 
 
         String blobLocation = response.getHeaderString("Location");
-        assertThat(blobLocation, is(UriBuilder.fromUri(REGISTRY_URL).path("v2/foobar/blobs").path(digest).build().toString()));
+        assertThat(blobLocation).isEqualTo(UriBuilder.fromUri(REGISTRY_URL).path("v2/foobar/blobs").path(digest).build().toString());
 
         log.debug("GET upload");
         response = client.target(uploadLocation).request().get();
-        assertThat(response.getStatusInfo(), is(NOT_FOUND));
+        assertThat(response.getStatusInfo()).isEqualTo(NOT_FOUND);
 
 
 
@@ -182,16 +181,16 @@ public class UploadIT {
         log.debug("HEAD blob");
         target = entryPoint.path("foobar").path("blobs").path(digest);
         response = target.request().head();
-        assertThat(response.getStatusInfo(), is(OK));
+        assertThat(response.getStatusInfo()).isEqualTo(OK);
 
         log.debug("GET blob range");
         target = entryPoint.path("foobar").path("blobs").path(digest);
         response = target.request().header("Range", "bytes=50000-149999").get();
-        assertThat(response.getStatusInfo(), is(PARTIAL_CONTENT));
-        assertThat(response.getHeaderString(HttpHeaders.CONTENT_LENGTH), is("100000"));
-        assertThat(response.getHeaderString("Content-Range"), is("bytes 50000-149999/314932"));
+        assertThat(response.getStatusInfo()).isEqualTo(PARTIAL_CONTENT);
+        assertThat(response.getHeaderString(HttpHeaders.CONTENT_LENGTH)).isEqualTo("100000");
+        assertThat(response.getHeaderString("Content-Range")).isEqualTo("bytes 50000-149999/251679");
         byte[] responseChunk = response.readEntity(byte[].class);
-        assertThat(responseChunk.length, is(CHUNK_SIZE));
-        assertThat(responseChunk, is(Arrays.copyOfRange(content, 50_000, 150_000)));
+        assertThat(responseChunk.length).isEqualTo(CHUNK_SIZE);
+        assertThat(responseChunk).isEqualTo(Arrays.copyOfRange(content, 50_000, 150_000));
     }
 }
