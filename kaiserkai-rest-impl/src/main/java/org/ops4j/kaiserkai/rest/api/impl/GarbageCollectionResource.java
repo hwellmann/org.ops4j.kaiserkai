@@ -32,6 +32,7 @@ import org.ops4j.kaiserkai.rest.model.ErrorCode;
 @ApplicationScoped
 @Path("_gc")
 @Produces(MediaType.APPLICATION_JSON)
+@PermissionsAllowed("ADMIN")
 public class GarbageCollectionResource {
 
     @Inject
@@ -48,7 +49,6 @@ public class GarbageCollectionResource {
     private Future<GarbageCollectionResult> futureResult;
 
     @POST
-    @PermissionsAllowed("ADMIN")
     @RequiresLock
     public Response collectGarbage() throws IOException {
         currentJob = UUID.randomUUID().toString();

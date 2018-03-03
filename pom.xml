@@ -48,7 +48,6 @@
                 <version>1.0.7</version>
             </dependency>
 
-
             <dependency>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-client</artifactId>
@@ -62,6 +61,11 @@
                 <scope>provided</scope>
             </dependency>
 
+            <dependency>
+                <groupId>javax.security.enterprise</groupId>
+                <artifactId>javax.security.enterprise-api</artifactId>
+                <version>1.0</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.apache.deltaspike.core</groupId>
@@ -79,6 +83,12 @@
                 <groupId>org.apache.deltaspike.modules</groupId>
                 <artifactId>deltaspike-security-module-impl</artifactId>
                 <version>${org.apache.deltaspike.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.glassfish.soteria</groupId>
+                <artifactId>javax.security.enterprise</artifactId>
+                <version>1.0</version>
             </dependency>
 
             <dependency>
@@ -282,9 +292,9 @@
     <profiles>
 
         <!-- Profiles for "Sonar" -->
-        <!-- The sonar profile should be activated by setting property 'sonar'. That's important because we need to set an 
-            empty 'jacoco.argLine' otherwise. You can't define an empty default for that property in the global properties section because 
-            the empty value will override the value from Jacoco. -->
+        <!-- The sonar profile should be activated by setting property 'sonar'. That's important because 
+            we need to set an empty 'jacoco.argLine' otherwise. You can't define an empty default for that property 
+            in the global properties section because the empty value will override the value from Jacoco. -->
         <profile>
             <id>no-sonar</id>
             <activation>

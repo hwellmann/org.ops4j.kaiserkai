@@ -128,7 +128,7 @@
                                         </ports>
                                         <volumes>
                                             <bind>
-                                                <volume>${project.basedir}/src/test/resources/max-post-size.sh:/opt/jboss/wildfly/bin/max-post-size.sh</volume>
+                                                <volume>${project.basedir}/src/test/resources/standalone.xml:/opt/jboss/wildfly/standalone/configuration/standalone.xml</volume>
                                             </bind>
                                         </volumes>
                                         <wait>
@@ -137,9 +137,6 @@
                                                 <status>401</status>
                                             </http>
                                             <time>60000</time>
-                                            <exec>
-                                                <postStart>/opt/jboss/wildfly/bin/max-post-size.sh</postStart>
-                                            </exec>
                                         </wait>
                                     </run>
                                 </image>

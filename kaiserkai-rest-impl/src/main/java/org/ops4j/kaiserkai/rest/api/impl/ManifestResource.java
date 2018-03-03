@@ -39,6 +39,7 @@ import org.ops4j.kaiserkai.rest.model.ErrorCode;
 @ApplicationScoped
 @Path("{repository}/manifests/{reference}")
 @Produces(MediaType.APPLICATION_JSON)
+@PermissionsAllowed("USER")
 public class ManifestResource {
 
     public static final String MEDIA_TYPE_MANIFEST = "application/vnd.docker.distribution.manifest.v2+json";

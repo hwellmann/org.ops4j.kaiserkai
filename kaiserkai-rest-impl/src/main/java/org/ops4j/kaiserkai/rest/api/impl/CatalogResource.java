@@ -11,12 +11,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.ops4j.kaiserkai.core.api.authz.PermissionsAllowed;
 import org.ops4j.kaiserkai.core.api.storage.file.StoragePaths;
 import org.ops4j.kaiserkai.rest.model.Catalog;
 
 @ApplicationScoped
 @Path("_catalog")
 @Produces(MediaType.APPLICATION_JSON)
+@PermissionsAllowed("USER")
 public class CatalogResource {
 
     @Inject

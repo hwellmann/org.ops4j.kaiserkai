@@ -14,11 +14,13 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.ops4j.kaiserkai.core.api.authz.PermissionsAllowed;
 import org.ops4j.kaiserkai.core.api.storage.file.StoragePaths;
 
 @ApplicationScoped
 @Path("{repository}/blobs/{digest}")
 @Produces(MediaType.APPLICATION_JSON)
+@PermissionsAllowed("USER")
 public class BlobResource {
 
     @Inject

@@ -23,6 +23,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
+import javax.security.enterprise.SecurityContext;
 
 import org.apache.deltaspike.core.util.AnnotationUtils;
 import org.apache.deltaspike.security.api.authorization.Secures;
@@ -37,7 +38,7 @@ import org.apache.deltaspike.security.api.authorization.Secures;
 public class PermissionAuthorizer {
 
     @Inject
-    private Authorization permissionHolder;
+    private SecurityContext securityContext;
 
     @Inject
     private BeanManager beanManager;
@@ -57,7 +58,7 @@ public class PermissionAuthorizer {
         PermissionsAllowed annotation = getAnnotation(context, PermissionsAllowed.class);
         String[] permissions = annotation.value();
         for (String methodPermission : permissions) {
-            if (permissionHolder.hasPermission(methodPermission)) {
+            if (securityContext.isCallerInRole(methodPermission)) {
                 return true;
             }
         }
