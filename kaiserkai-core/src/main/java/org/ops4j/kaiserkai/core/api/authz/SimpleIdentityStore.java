@@ -7,12 +7,12 @@ import java.util.HashSet;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.security.enterprise.credential.Password;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
 
 import org.ops4j.kaiserkai.core.api.config.RegistryConfiguration;
+import org.ops4j.kaiserkai.core.api.storage.file.DigestBuilder;
 
 @ApplicationScoped
 public class SimpleIdentityStore implements IdentityStore {
@@ -22,13 +22,18 @@ public class SimpleIdentityStore implements IdentityStore {
 
     public CredentialValidationResult validate(UsernamePasswordCredential credential) {
         String user = credential.getCaller();
-        Password password = credential.getPassword();
-        if (user.equals(config.getOperatorName()) && password.compareTo(config.getOperatorDigest())) {
+        String password = credential.getPasswordAsString();
+        if (matchesDigest(user, password, config.getOperatorDigest())) {
             return new CredentialValidationResult(user, new HashSet<>(Arrays.asList("USER")));
         }
-        else if (user.equals(config.getAdminName()) && password.compareTo(config.getAdminDigest())) {
+        else if (matchesDigest(user, password, config.getAdminDigest())) {
             return new CredentialValidationResult(user, new HashSet<>(Arrays.asList("USER", "ADMIN")));
         }
         return INVALID_RESULT;
+    }
+
+    private boolean matchesDigest(String user, String password, String digest) {
+        String actualDigest = DigestBuilder.computeDigest(String.format("%s:%s", user, password));
+        return actualDigest.equals(digest);
     }
 }

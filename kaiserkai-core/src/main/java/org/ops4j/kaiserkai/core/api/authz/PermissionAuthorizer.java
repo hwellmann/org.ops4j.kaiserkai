@@ -18,6 +18,7 @@
 package org.ops4j.kaiserkai.core.api.authz;
 
 import java.lang.annotation.Annotation;
+import java.util.stream.Stream;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
@@ -56,13 +57,7 @@ public class PermissionAuthorizer {
     @PermissionsAllowed
     public boolean doSecured(InvocationContext context) {
         PermissionsAllowed annotation = getAnnotation(context, PermissionsAllowed.class);
-        String[] permissions = annotation.value();
-        for (String methodPermission : permissions) {
-            if (securityContext.isCallerInRole(methodPermission)) {
-                return true;
-            }
-        }
-        return false;
+        return Stream.of(annotation.value()).anyMatch(p -> securityContext.isCallerInRole(p));
     }
 
     private <T extends Annotation> T getAnnotation(InvocationContext context, Class<T> klass) {
