@@ -18,6 +18,7 @@
 
     </dependencies>
     <build>
+        <finalName>kaiserkai-web</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -58,14 +59,7 @@
                             <build>
                                 <dockerFileDir>kaiserkai</dockerFileDir>
                                 <assembly>
-                                    <inline xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2">
-                                        <dependencySet>
-                                            <useProjectArtifact>true</useProjectArtifact>
-                                            <useTransitiveDependencies>false</useTransitiveDependencies>
-                                            <outputDirectory>war</outputDirectory>
-                                            <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-                                        </dependencySet>
-                                    </inline>
+                                    <descriptorRef>artifact</descriptorRef>
                                 </assembly>
                                 <nocache>true</nocache>
                             </build>
@@ -76,7 +70,8 @@
                             <build>
                                 <dockerFileDir>kaiserkai-swarm</dockerFileDir>
                                 <assembly>
-                                    <inline xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2">
+                                    <inline
+                                        xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2">
                                         <dependencySet>
                                             <useProjectArtifact>true</useProjectArtifact>
                                             <useTransitiveDependencies>false</useTransitiveDependencies>
@@ -85,7 +80,7 @@
                                         </dependencySet>
                                         <files>
                                             <file>
-                                                <source>${project.build.directory}/kaiserkai-web-${project.version}-hollow-swarm.jar</source>
+                                                <source>${project.build.directory}/kaiserkai-web-hollow-swarm.jar</source>
                                                 <outputDirectory>war</outputDirectory>
                                                 <destName>kaiserkai-hollow-swarm.jar</destName>
                                             </file>
