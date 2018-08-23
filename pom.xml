@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.ops4j</groupId>
@@ -17,7 +16,7 @@
         <org.jboss.resteasy.version>3.0.24.Final</org.jboss.resteasy.version>
         <org.junit.jupiter.version>5.2.0</org.junit.jupiter.version>
         <org.junit.platform.version>1.2.0</org.junit.platform.version>
-        <org.wildfly.swarm.version>2018.4.1</org.wildfly.swarm.version>
+        <org.wildfly.swarm.version>2.1.0.Final</org.wildfly.swarm.version>
         <slf4j.version>1.7.7</slf4j.version>
     </properties>
 
@@ -165,7 +164,7 @@
             </dependency>
 
             <dependency>
-                <groupId>org.wildfly.swarm</groupId>
+                <groupId>io.thorntail</groupId>
                 <artifactId>bom</artifactId>
                 <version>${org.wildfly.swarm.version}</version>
                 <type>pom</type>
@@ -256,7 +255,7 @@
                 </property>
             </activation>
             <properties>
-                <jacoco.argLine />
+                <jacoco.argLine/>
             </properties>
         </profile>
         <profile>

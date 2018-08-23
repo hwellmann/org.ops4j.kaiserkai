@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.ops4j.kaiserkai</groupId>
@@ -28,8 +27,8 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.wildfly.swarm</groupId>
-                <artifactId>wildfly-swarm-plugin</artifactId>
+                <groupId>io.thorntail</groupId>
+                <artifactId>thorntail-maven-plugin</artifactId>
                 <version>${org.wildfly.swarm.version}</version>
                 <configuration>
                     <fractions>cdi,jaxrs</fractions>
@@ -70,8 +69,7 @@
                             <build>
                                 <dockerFileDir>kaiserkai-swarm</dockerFileDir>
                                 <assembly>
-                                    <inline
-                                        xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2">
+                                    <inline xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2">
                                         <dependencySet>
                                             <useProjectArtifact>true</useProjectArtifact>
                                             <useTransitiveDependencies>false</useTransitiveDependencies>
@@ -80,9 +78,9 @@
                                         </dependencySet>
                                         <files>
                                             <file>
-                                                <source>${project.build.directory}/kaiserkai-web-hollow-swarm.jar</source>
+                                                <source>${project.build.directory}/kaiserkai-web-hollow-thorntail.jar</source>
                                                 <outputDirectory>war</outputDirectory>
-                                                <destName>kaiserkai-hollow-swarm.jar</destName>
+                                                <destName>kaiserkai-hollow-thorntail.jar</destName>
                                             </file>
                                         </files>
                                     </inline>
