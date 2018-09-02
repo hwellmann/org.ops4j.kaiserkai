@@ -29,7 +29,7 @@
             <plugin>
                 <groupId>io.thorntail</groupId>
                 <artifactId>thorntail-maven-plugin</artifactId>
-                <version>${org.wildfly.swarm.version}</version>
+                <version>${io.thorntail.version}</version>
                 <configuration>
                     <fractions>cdi,jaxrs</fractions>
                     <hollow>true</hollow>
@@ -64,10 +64,10 @@
                             </build>
                         </image>
                         <image>
-                            <alias>kaiserkai-swarm</alias>
-                            <name>ops4j/kaiserkai-swarm:%v</name>
+                            <alias>kaiserkai-thorntail</alias>
+                            <name>ops4j/kaiserkai-thorntail:%v</name>
                             <build>
-                                <dockerFileDir>kaiserkai-swarm</dockerFileDir>
+                                <dockerFileDir>kaiserkai-thorntail</dockerFileDir>
                                 <assembly>
                                     <inline xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2">
                                         <dependencySet>

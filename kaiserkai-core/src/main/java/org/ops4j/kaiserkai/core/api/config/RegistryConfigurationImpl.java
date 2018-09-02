@@ -8,7 +8,7 @@ import javax.enterprise.context.Initialized;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import org.apache.deltaspike.core.api.config.ConfigProperty;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +22,7 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
     private String home;
 
     @Inject
-    @ConfigProperty(name = "kaiserkai.fs.root")
+    @ConfigProperty(name = "kaiserkai.fs.root", defaultValue = "")
     private String registryRoot;
 
     @Inject
@@ -43,13 +43,14 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
 
     @PostConstruct
     void init() {
-        if (registryRoot == null) {
+        if (registryRoot.isEmpty()) {
             registryRoot = home + "/kaiserkai";
         }
 
     }
 
     void logConfiguration(@Observes @Initialized(ApplicationScoped.class) Object event) {
+
         log.info("=== Docker Registry Configuration:");
         log.info("    registryRoot = {}", registryRoot);
         log.info("    operatorName = {}", operatorName);

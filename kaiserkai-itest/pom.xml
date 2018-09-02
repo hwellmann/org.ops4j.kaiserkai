@@ -181,7 +181,7 @@
             </build>
         </profile>
         <profile>
-            <id>swarm</id>
+            <id>thorntail</id>
             <build>
                 <plugins>
                     <plugin>
@@ -192,7 +192,7 @@
                             <images>
                                 <image>
                                     <alias>kaiserkai</alias>
-                                    <name>ops4j/kaiserkai-swarm:%v</name>
+                                    <name>ops4j/kaiserkai-thorntail:%v</name>
                                     <run>
                                         <ports>
                                             <port>kaiserkai.http.port:8080</port>
