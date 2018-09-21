@@ -100,13 +100,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.junit.platform</groupId>
-                        <artifactId>junit-platform-surefire-provider</artifactId>
-                        <version>${org.junit.platform.version}</version>
-                    </dependency>
-                </dependencies>
                 <executions>
                     <execution>
                         <id>it</id>
