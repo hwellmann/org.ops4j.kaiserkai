@@ -1,4 +1,4 @@
-FROM jboss/wildfly:14.0.0.Final
+FROM jboss/wildfly:14.0.1.Final
 LABEL maintainer="Harald Wellmann <harald.wellmann@gmx.de>"
 
 # deploy the WAR from the Maven build
