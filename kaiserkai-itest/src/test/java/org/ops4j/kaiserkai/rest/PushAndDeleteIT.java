@@ -32,10 +32,11 @@ import org.ops4j.kaiserkai.core.api.model.JobStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.fabric8.docker.api.model.AuthConfig;
-import io.fabric8.docker.client.ConfigBuilder;
-import io.fabric8.docker.client.DefaultDockerClient;
-import io.fabric8.docker.client.DockerClient;
+import com.spotify.docker.client.DefaultDockerClient;
+import com.spotify.docker.client.DockerClient;
+import com.spotify.docker.client.exceptions.DockerCertificateException;
+import com.spotify.docker.client.exceptions.DockerException;
+
 
 /**
  * @author Harald Wellmann
@@ -56,14 +57,8 @@ public class PushAndDeleteIT {
     private RegistryClient registryClient;
 
     @BeforeEach
-    public void before() {
-        ConfigBuilder configBuilder = new ConfigBuilder();
-        AuthConfig authConfig = new AuthConfig();
-        authConfig.setServeraddress(REGISTRY);
-        authConfig.setUsername("admin");
-        authConfig.setPassword("admin");
-        configBuilder.addToAuthConfigs(REGISTRY, authConfig);
-        dockerClient = new DefaultDockerClient(configBuilder.build());
+    public void before() throws DockerCertificateException {
+        dockerClient = DefaultDockerClient.fromEnv().build();
 
         log.debug("registry URL = {}", REGISTRY_URL);
 
@@ -76,7 +71,7 @@ public class PushAndDeleteIT {
     }
 
     @Test
-    public void copyImages() throws InterruptedException, IOException {
+    public void copyImages() throws InterruptedException, IOException, DockerException {
         assertThat(getRepositories()).isEmpty();
 
         copyImage("postgres", "9.6.2", REGISTRY);
@@ -111,20 +106,16 @@ public class PushAndDeleteIT {
             }
         }
 
-        assertThat(getRepositories()).isEmpty();;
+        assertThat(getRepositories()).isEmpty();
     }
 
-    public void copyImage(String repository, String tag, String registry) {
+    public void copyImage(String repository, String tag, String registry) throws DockerException, InterruptedException {
         log.info("copying image {}:{}", repository, tag);
-        DockerClientListener listener = new DockerClientListener();
-        dockerClient.image().withName(repository).pull().usingListener(listener).withTag(tag).fromRegistry();
-        listener.await();
+        dockerClient.pull(String.format("%s:%s", repository, tag));
 
-        dockerClient.image().withName(String.format("%s:%s", repository, tag)).tag().
-            inRepository(String.format("%s/%s", registry, repository)).withTagName(tag);
+        dockerClient.tag(String.format("%s:%s", repository, tag), String.format("%s/%s", registry, repository));
 
-        dockerClient.image().withName(String.format("%s/%s:%s", registry, repository, tag)).push().usingListener(listener).toRegistry();
-        listener.await();
+        dockerClient.push(String.format("%s/%s:%s", registry, repository, tag));
     }
 
     private List<String> getRepositories() {
