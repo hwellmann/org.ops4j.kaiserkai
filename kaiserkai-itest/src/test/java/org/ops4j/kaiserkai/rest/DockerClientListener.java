@@ -38,8 +38,6 @@ public class DockerClientListener implements EventListener {
 
     @Override
     public void onError(String message) {
-        log.error(message);
-        latch.countDown();
     }
 
     @Override
@@ -54,5 +52,11 @@ public class DockerClientListener implements EventListener {
         } catch (InterruptedException exc) {
             log.error("Interrupted", exc);
         }
+    }
+
+    @Override
+    public void onError(Throwable exc) {
+        log.error(exc.getMessage());
+        latch.countDown();
     }
 }
