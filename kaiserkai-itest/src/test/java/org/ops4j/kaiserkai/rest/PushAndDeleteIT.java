@@ -58,7 +58,7 @@ public class PushAndDeleteIT {
 
     @BeforeEach
     public void before() throws DockerCertificateException {
-        dockerClient = DefaultDockerClient.fromEnv().build();
+        dockerClient = DefaultDockerClient.fromEnv().registryAuthSupplier(new LocalAuthSupplier()).build();
 
         log.debug("registry URL = {}", REGISTRY_URL);
 
