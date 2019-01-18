@@ -31,7 +31,7 @@
                 <artifactId>thorntail-maven-plugin</artifactId>
                 <version>${io.thorntail.version}</version>
                 <configuration>
-                    <fractions>cdi,jaxrs</fractions>
+                    <fractions>cdi,jaxrs,ee-security,microprofile-config</fractions>
                     <hollow>true</hollow>
                     <properties>
                         <swarm.undertow.servers.default-server.http-listeners.default.max-post-size>99000000</swarm.undertow.servers.default-server.http-listeners.default.max-post-size>
