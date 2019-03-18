@@ -1,4 +1,4 @@
-FROM openjdk:8u151-jdk
+FROM openjdk:11.0.2-jdk-stretch
 LABEL maintainer="Harald Wellmann <harald.wellmann@gmx.de>"
 
 EXPOSE 8080
