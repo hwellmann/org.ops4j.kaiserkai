@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
@@ -39,7 +40,7 @@ import org.ops4j.kaiserkai.rest.model.ErrorCode;
 @ApplicationScoped
 @Path("{repository}/manifests/{reference}")
 @Produces(MediaType.APPLICATION_JSON)
-@PermissionsAllowed("USER")
+@RolesAllowed("USER")
 public class ManifestResource {
 
     public static final String MEDIA_TYPE_MANIFEST = "application/vnd.docker.distribution.manifest.v2+json";

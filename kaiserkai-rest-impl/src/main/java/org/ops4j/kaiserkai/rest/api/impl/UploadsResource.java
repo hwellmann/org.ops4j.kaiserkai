@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.util.UUID;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
@@ -31,7 +32,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.ops4j.kaiserkai.core.api.authz.PermissionsAllowed;
 import org.ops4j.kaiserkai.core.api.storage.file.DigestBuilder;
 import org.ops4j.kaiserkai.core.api.storage.file.StoragePaths;
 import org.ops4j.kaiserkai.rest.exc.ResourceNotFoundException;
@@ -40,7 +40,7 @@ import org.ops4j.kaiserkai.rest.model.ErrorCode;
 @ApplicationScoped
 @Path("{repository}/blobs/uploads")
 @Produces(MediaType.APPLICATION_JSON)
-@PermissionsAllowed("USER")
+@RolesAllowed("USER")
 public class UploadsResource {
 
     private static final String DOCKER_UPLOAD_UUID = "Docker-Upload-UUID";

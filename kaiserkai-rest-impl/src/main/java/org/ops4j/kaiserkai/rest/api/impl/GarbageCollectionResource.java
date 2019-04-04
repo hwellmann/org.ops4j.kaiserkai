@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -18,7 +19,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.ops4j.kaiserkai.core.api.authz.PermissionsAllowed;
 import org.ops4j.kaiserkai.core.api.lock.RequiresLock;
 import org.ops4j.kaiserkai.core.api.model.GarbageCollectionResult;
 import org.ops4j.kaiserkai.core.api.model.JobStatus;
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 @ApplicationScoped
 @Path("_gc")
 @Produces(MediaType.APPLICATION_JSON)
-@PermissionsAllowed("ADMIN")
+@RolesAllowed("ADMIN")
 public class GarbageCollectionResource {
 
     private static Logger log = LoggerFactory.getLogger(GarbageCollectionResource.class);

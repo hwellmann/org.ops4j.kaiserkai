@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.io.File;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -13,7 +14,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.ops4j.kaiserkai.core.api.authz.PermissionsAllowed;
 import org.ops4j.kaiserkai.core.api.storage.file.FileOperations;
 import org.ops4j.kaiserkai.core.api.storage.file.StoragePaths;
 import org.ops4j.kaiserkai.rest.model.Tags;
@@ -21,7 +21,7 @@ import org.ops4j.kaiserkai.rest.model.Tags;
 @ApplicationScoped
 @Path("{repository}/tags/list")
 @Produces(MediaType.APPLICATION_JSON)
-@PermissionsAllowed("USER")
+@RolesAllowed("USER")
 public class TagsResource {
 
     @Inject

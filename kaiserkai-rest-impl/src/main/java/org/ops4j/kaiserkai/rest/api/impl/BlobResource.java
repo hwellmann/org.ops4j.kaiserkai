@@ -3,6 +3,7 @@ package org.ops4j.kaiserkai.rest.api.impl;
 import java.io.File;
 import java.io.IOException;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -14,13 +15,12 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.ops4j.kaiserkai.core.api.authz.PermissionsAllowed;
 import org.ops4j.kaiserkai.core.api.storage.file.StoragePaths;
 
 @ApplicationScoped
 @Path("{repository}/blobs/{digest}")
 @Produces(MediaType.APPLICATION_JSON)
-@PermissionsAllowed("USER")
+@RolesAllowed("USER")
 public class BlobResource {
 
     @Inject
