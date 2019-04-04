@@ -3,6 +3,7 @@ package org.ops4j.kaiserkai.rest.api.impl;
 import java.io.IOException;
 import java.net.URI;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -24,6 +25,8 @@ import org.ops4j.kaiserkai.core.api.model.JobStatus;
 import org.ops4j.kaiserkai.core.api.storage.file.GarbageCollectionService;
 import org.ops4j.kaiserkai.rest.exc.ResourceNotFoundException;
 import org.ops4j.kaiserkai.rest.model.ErrorCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
 @Path("_gc")
@@ -31,11 +34,10 @@ import org.ops4j.kaiserkai.rest.model.ErrorCode;
 @PermissionsAllowed("ADMIN")
 public class GarbageCollectionResource {
 
+    private static Logger log = LoggerFactory.getLogger(GarbageCollectionResource.class);
+
     @Inject
     GarbageCollectionService gc;
-
-//    @Resource
-//    private ManagedExecutorService executor;
 
     @Context
     private UriInfo uriInfo;
@@ -48,11 +50,15 @@ public class GarbageCollectionResource {
     @RequiresLock
     public Response collectGarbage() throws IOException {
         currentJob = UUID.randomUUID().toString();
-//        futureResult = executor.submit(ManagedExecutors.managedTask(() -> gc.collectGarbage(currentJob),
-//                new GarbageCollectionListener()));
-
+        futureResult = CompletableFuture.supplyAsync(() -> gc.collectGarbage(currentJob)).whenComplete(this::onComplete);
         URI uri = uriInfo.getRequestUriBuilder().path(currentJob).build();
         return Response.accepted().location(uri).build();
+    }
+
+    private void onComplete(GarbageCollectionResult result, Throwable exc) {
+        if (exc != null) {
+            log.error("Garbage collection terminated abnormally", exc);
+        }
     }
 
     @GET
