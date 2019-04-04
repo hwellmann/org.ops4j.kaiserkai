@@ -46,7 +46,7 @@ public class UploadsResource {
     private static final String DOCKER_UPLOAD_UUID = "Docker-Upload-UUID";
 
     @Inject
-    private StoragePaths paths;
+    StoragePaths paths;
 
     @Context
     private UriInfo uriInfo;

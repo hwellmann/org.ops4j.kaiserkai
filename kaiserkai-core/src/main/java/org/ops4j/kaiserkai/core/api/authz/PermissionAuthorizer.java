@@ -20,14 +20,10 @@ package org.ops4j.kaiserkai.core.api.authz;
 import java.lang.annotation.Annotation;
 import java.util.stream.Stream;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
 import javax.security.enterprise.SecurityContext;
 
-import org.apache.deltaspike.core.util.AnnotationUtils;
-import org.apache.deltaspike.security.api.authorization.Secures;
 
 /**
  * Authorizer for the {@link PermissionsAllowed} security binding.
@@ -35,13 +31,13 @@ import org.apache.deltaspike.security.api.authorization.Secures;
  * @author hwellmann
  *
  */
-@ApplicationScoped
+// @ApplicationScoped
 public class PermissionAuthorizer {
 
-    @Inject
+    // @Inject
     private SecurityContext securityContext;
 
-    @Inject
+    // @Inject
     private BeanManager beanManager;
 
     /**
@@ -53,16 +49,17 @@ public class PermissionAuthorizer {
      *            invocation context of secured method
      * @return true if the invocation is permitted
      */
-    @Secures
-    @PermissionsAllowed
+    //@Secures
+    //@PermissionsAllowed
     public boolean doSecured(InvocationContext context) {
         PermissionsAllowed annotation = getAnnotation(context, PermissionsAllowed.class);
         return Stream.of(annotation.value()).anyMatch(p -> securityContext.isCallerInRole(p));
     }
 
     private <T extends Annotation> T getAnnotation(InvocationContext context, Class<T> klass) {
-        T annotation = AnnotationUtils.extractAnnotationFromMethodOrClass(beanManager,
-            context.getMethod(), context.getTarget().getClass(), klass);
+        T annotation = null;
+//        AnnotationUtils.extractAnnotationFromMethodOrClass(beanManager,
+//            context.getMethod(), context.getTarget().getClass(), klass);
         return annotation;
     }
 }

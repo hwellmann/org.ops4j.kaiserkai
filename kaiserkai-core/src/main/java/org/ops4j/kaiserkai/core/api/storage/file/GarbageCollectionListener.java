@@ -19,8 +19,6 @@ package org.ops4j.kaiserkai.core.api.storage.file;
 
 import java.util.concurrent.Future;
 
-import javax.enterprise.concurrent.ManagedExecutorService;
-import javax.enterprise.concurrent.ManagedTaskListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,26 +27,22 @@ import org.slf4j.LoggerFactory;
  * @author Harald Wellmann
  *
  */
-public class GarbageCollectionListener implements ManagedTaskListener {
+public class GarbageCollectionListener /* implements ManagedTaskListener*/ {
 
     private static Logger log = LoggerFactory.getLogger(GarbageCollectionListener.class);
 
-    @Override
-    public void taskSubmitted(Future<?> future, ManagedExecutorService executor, Object task) {
-    }
-
-    @Override
-    public void taskAborted(Future<?> future, ManagedExecutorService executor, Object task, Throwable exception) {
-    }
-
-    @Override
-    public void taskDone(Future<?> future, ManagedExecutorService executor, Object task, Throwable exception) {
-        if (exception != null) {
-            log.error("Garbage collection terminated abnormally", exception);
-        }
-    }
-
-    @Override
-    public void taskStarting(Future<?> future, ManagedExecutorService executor, Object task) {
-    }
+//    public void taskSubmitted(Future<?> future, ManagedExecutorService executor, Object task) {
+//    }
+//
+//    public void taskAborted(Future<?> future, ManagedExecutorService executor, Object task, Throwable exception) {
+//    }
+//
+//    public void taskDone(Future<?> future, ManagedExecutorService executor, Object task, Throwable exception) {
+//        if (exception != null) {
+//            log.error("Garbage collection terminated abnormally", exception);
+//        }
+//    }
+//
+//    public void taskStarting(Future<?> future, ManagedExecutorService executor, Object task) {
+//    }
 }

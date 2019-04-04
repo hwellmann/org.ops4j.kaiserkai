@@ -25,8 +25,6 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import org.apache.deltaspike.security.api.authorization.SecurityBindingType;
-
 /**
  * Methods annotated with this security binding will try to lock the registry and will
  * fail with an {@code AccessDeniedException} if the lock cannot be obtained.
@@ -39,7 +37,7 @@ import org.apache.deltaspike.security.api.authorization.SecurityBindingType;
 @Retention(value = RUNTIME)
 @Target({ TYPE, METHOD })
 @Documented
-@SecurityBindingType
+//@SecurityBindingType
 public @interface RequiresLock {
 
 }

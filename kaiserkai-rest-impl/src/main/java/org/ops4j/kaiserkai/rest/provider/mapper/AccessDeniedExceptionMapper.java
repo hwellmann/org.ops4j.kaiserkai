@@ -20,23 +20,22 @@ package org.ops4j.kaiserkai.rest.provider.mapper;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 
-import javax.enterprise.context.Dependent;
+import java.io.IOException;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import org.apache.deltaspike.security.api.authorization.AccessDeniedException;
 import org.ops4j.kaiserkai.rest.model.ApiError;
 import org.ops4j.kaiserkai.rest.model.ApiErrors;
 import org.ops4j.kaiserkai.rest.model.ErrorCode;
 
 
 @Provider
-@Dependent
-public class AccessDeniedExceptionMapper implements ExceptionMapper<AccessDeniedException> {
+public class AccessDeniedExceptionMapper implements ExceptionMapper<IOException> {
 
     @Override
-    public Response toResponse(AccessDeniedException exception) {
+    public Response toResponse(IOException exception) {
         ApiError error = new ApiError();
         error.setCode(ErrorCode.DENIED);
         error.setMessage("requested access to the resource is denied");

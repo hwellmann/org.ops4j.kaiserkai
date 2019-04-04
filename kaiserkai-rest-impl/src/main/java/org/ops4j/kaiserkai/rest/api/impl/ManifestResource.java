@@ -45,7 +45,7 @@ public class ManifestResource {
     public static final String MEDIA_TYPE_MANIFEST = "application/vnd.docker.distribution.manifest.v2+json";
 
     @Inject
-    private StoragePaths paths;
+    StoragePaths paths;
 
     @Context
     private UriInfo uriInfo;

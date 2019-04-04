@@ -5,19 +5,17 @@ import static javax.security.enterprise.identitystore.CredentialValidationResult
 import java.util.Arrays;
 import java.util.HashSet;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
 
 import org.ops4j.kaiserkai.core.api.config.RegistryConfiguration;
-import org.ops4j.kaiserkai.core.api.storage.file.DigestBuilder;
+//import org.ops4j.kaiserkai.core.api.storage.file.DigestBuilder;
 
-@ApplicationScoped
+// @ApplicationScoped
 public class SimpleIdentityStore implements IdentityStore {
 
-    @Inject
+    // @Inject
     private RegistryConfiguration config;
 
     public CredentialValidationResult validate(UsernamePasswordCredential credential) {
@@ -33,8 +31,9 @@ public class SimpleIdentityStore implements IdentityStore {
     }
 
     private boolean matchesDigest(String user, char[] password, String digest) {
-        String actualDigest = DigestBuilder.computeDigest(concatenate(user, password));
-        return actualDigest.equals(digest);
+//        String actualDigest = DigestBuilder.computeDigest(concatenate(user, password));
+//        return actualDigest.equals(digest);
+        return false;
     }
 
     private char[] concatenate(String user, char[] password) {

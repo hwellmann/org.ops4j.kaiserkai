@@ -57,10 +57,10 @@ public class GarbageCollectionService {
     private static final String UNUSED = "_unused";
 
     @Inject
-    private LockManager lockManager;
+    LockManager lockManager;
 
     @Inject
-    private StoragePaths paths;
+    StoragePaths paths;
 
 
     /**

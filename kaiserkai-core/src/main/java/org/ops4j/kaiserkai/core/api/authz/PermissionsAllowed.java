@@ -27,8 +27,6 @@ import java.lang.annotation.Target;
 
 import javax.enterprise.util.Nonbinding;
 
-import org.apache.deltaspike.security.api.authorization.SecurityBindingType;
-
 /**
  * A security binding annotation for classes or methods, listing one or more permissions. Methods
  * with this binding will be intercepted by DeltaSpike Security. The invoker is required to have at
@@ -40,7 +38,7 @@ import org.apache.deltaspike.security.api.authorization.SecurityBindingType;
 @Retention(value = RUNTIME)
 @Target({ TYPE, METHOD })
 @Documented
-@SecurityBindingType
+//@SecurityBindingType
 public @interface PermissionsAllowed {
 
     /**

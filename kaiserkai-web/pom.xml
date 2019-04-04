@@ -6,7 +6,7 @@
         <version>0.1.0-SNAPSHOT</version>
     </parent>
     <artifactId>kaiserkai-web</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
@@ -14,95 +14,29 @@
             <artifactId>kaiserkai-rest-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-resteasy-jsonb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
 
     </dependencies>
     <build>
-        <finalName>kaiserkai-web</finalName>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>io.thorntail</groupId>
-                <artifactId>thorntail-maven-plugin</artifactId>
-                <version>${io.thorntail.version}</version>
-                <configuration>
-                    <fractions>cdi,jaxrs,ee-security,microprofile-config</fractions>
-                    <hollow>true</hollow>
-                    <properties>
-                        <swarm.undertow.servers.default-server.http-listeners.default.max-post-size>99000000</swarm.undertow.servers.default-server.http-listeners.default.max-post-size>
-                    </properties>
-                </configuration>
+                <groupId>io.quarkus</groupId>
+                <artifactId>quarkus-maven-plugin</artifactId>
+                <version>${io.quarkus.version}</version>
                 <executions>
                     <execution>
-                        <id>package</id>
-                        <goals>
-                            <goal>package</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <configuration>
-                    <removeVolumes>true</removeVolumes>
-                    <images>
-                        <image>
-                            <alias>kaiserkai</alias>
-                            <name>ops4j/kaiserkai:%v</name>
-                            <build>
-                                <dockerFileDir>kaiserkai</dockerFileDir>
-                                <assembly>
-                                    <descriptorRef>artifact</descriptorRef>
-                                </assembly>
-                                <nocache>true</nocache>
-                            </build>
-                        </image>
-                        <image>
-                            <alias>kaiserkai-thorntail</alias>
-                            <name>ops4j/kaiserkai-thorntail:%v</name>
-                            <build>
-                                <dockerFileDir>kaiserkai-thorntail</dockerFileDir>
-                                <assembly>
-                                    <inline xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2">
-                                        <dependencySet>
-                                            <useProjectArtifact>true</useProjectArtifact>
-                                            <useTransitiveDependencies>false</useTransitiveDependencies>
-                                            <outputDirectory>war</outputDirectory>
-                                            <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-                                        </dependencySet>
-                                        <files>
-                                            <file>
-                                                <source>${project.build.directory}/kaiserkai-web-hollow-thorntail.jar</source>
-                                                <outputDirectory>war</outputDirectory>
-                                                <destName>kaiserkai-hollow-thorntail.jar</destName>
-                                            </file>
-                                        </files>
-                                    </inline>
-                                </assembly>
-                                <nocache>true</nocache>
-                            </build>
-                        </image>
-                    </images>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>build</id>
                         <goals>
                             <goal>build</goal>
-                        </goals>
-                        <phase>package</phase>
-                    </execution>
-                    <execution>
-                        <id>push</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>push</goal>
                         </goals>
                     </execution>
                 </executions>

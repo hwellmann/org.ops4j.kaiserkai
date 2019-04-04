@@ -20,7 +20,6 @@ package org.ops4j.kaiserkai.rest.provider.mapper;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
-import javax.enterprise.context.Dependent;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
@@ -33,7 +32,6 @@ import org.ops4j.kaiserkai.rest.model.ErrorCode;
 
 
 @Provider
-@Dependent
 public class NotAuthorizedExceptionMapper implements ExceptionMapper<NotAuthorizedException> {
 
     @Override

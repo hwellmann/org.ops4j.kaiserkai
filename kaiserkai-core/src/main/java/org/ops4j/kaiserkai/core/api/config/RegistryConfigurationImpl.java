@@ -19,27 +19,27 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
 
     @Inject
     @ConfigProperty(name = "user.home")
-    private String home;
+    String home;
 
     @Inject
     @ConfigProperty(name = "kaiserkai.fs.root", defaultValue = "")
-    private String registryRoot;
+    String registryRoot;
 
     @Inject
     @ConfigProperty(name = "kaiserkai.auth.operator.name", defaultValue = "operator")
-    private String operatorName;
+    String operatorName;
 
     @Inject
     @ConfigProperty(name = "kaiserkai.auth.operator.digest", defaultValue = "sha256:1e54dae5e77cea8d5be042243b0137e63b7c27625fe3e84717e645237589914c")
-    private String operatorDigest;
+    String operatorDigest;
 
     @Inject
     @ConfigProperty(name = "kaiserkai.auth.admin.name", defaultValue = "admin")
-    private String adminName;
+    String adminName;
 
     @Inject
     @ConfigProperty(name = "kaiserkai.auth.admin.digest", defaultValue = "sha256:8da193366e1554c08b2870c50f737b9587c3372b656151c4a96028af26f51334")
-    private String adminDigest;
+    String adminDigest;
 
     @PostConstruct
     void init() {

@@ -22,7 +22,7 @@ import org.ops4j.kaiserkai.rest.model.Catalog;
 public class CatalogResource {
 
     @Inject
-    private StoragePaths paths;
+    StoragePaths paths;
 
     @GET
     public Catalog findRepositories() {

@@ -21,8 +21,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.interceptor.InvocationContext;
 
-import org.apache.deltaspike.security.api.authorization.Secures;
-
 /**
  * Authorizer for the {@link DenyIfLocked} and {@link RequiresLock} security bindings.
  *
@@ -33,15 +31,15 @@ import org.apache.deltaspike.security.api.authorization.Secures;
 public class LockAuthorizer {
 
     @Inject
-    private LockManager lockManager;
+    LockManager lockManager;
 
-    @Secures
+    //@Secures
     @DenyIfLocked
     public boolean doUnlessLocked(InvocationContext context) {
         return !lockManager.isLocked();
     }
 
-    @Secures
+    //@Secures
     @RequiresLock
     public boolean lockAndDo(InvocationContext context) {
         return lockManager.lock();

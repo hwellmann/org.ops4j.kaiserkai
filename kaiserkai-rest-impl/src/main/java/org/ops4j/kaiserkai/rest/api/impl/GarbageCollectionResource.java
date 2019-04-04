@@ -5,9 +5,6 @@ import java.net.URI;
 import java.util.UUID;
 import java.util.concurrent.Future;
 
-import javax.annotation.Resource;
-import javax.enterprise.concurrent.ManagedExecutorService;
-import javax.enterprise.concurrent.ManagedExecutors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -24,7 +21,6 @@ import org.ops4j.kaiserkai.core.api.authz.PermissionsAllowed;
 import org.ops4j.kaiserkai.core.api.lock.RequiresLock;
 import org.ops4j.kaiserkai.core.api.model.GarbageCollectionResult;
 import org.ops4j.kaiserkai.core.api.model.JobStatus;
-import org.ops4j.kaiserkai.core.api.storage.file.GarbageCollectionListener;
 import org.ops4j.kaiserkai.core.api.storage.file.GarbageCollectionService;
 import org.ops4j.kaiserkai.rest.exc.ResourceNotFoundException;
 import org.ops4j.kaiserkai.rest.model.ErrorCode;
@@ -36,10 +32,10 @@ import org.ops4j.kaiserkai.rest.model.ErrorCode;
 public class GarbageCollectionResource {
 
     @Inject
-    private GarbageCollectionService gc;
+    GarbageCollectionService gc;
 
-    @Resource
-    private ManagedExecutorService executor;
+//    @Resource
+//    private ManagedExecutorService executor;
 
     @Context
     private UriInfo uriInfo;
@@ -52,8 +48,8 @@ public class GarbageCollectionResource {
     @RequiresLock
     public Response collectGarbage() throws IOException {
         currentJob = UUID.randomUUID().toString();
-        futureResult = executor.submit(ManagedExecutors.managedTask(() -> gc.collectGarbage(currentJob),
-                new GarbageCollectionListener()));
+//        futureResult = executor.submit(ManagedExecutors.managedTask(() -> gc.collectGarbage(currentJob),
+//                new GarbageCollectionListener()));
 
         URI uri = uriInfo.getRequestUriBuilder().path(currentJob).build();
         return Response.accepted().location(uri).build();

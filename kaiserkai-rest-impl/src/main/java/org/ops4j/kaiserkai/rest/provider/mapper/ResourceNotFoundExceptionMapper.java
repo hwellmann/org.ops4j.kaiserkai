@@ -20,7 +20,6 @@ package org.ops4j.kaiserkai.rest.provider.mapper;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
-import javax.enterprise.context.Dependent;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -31,7 +30,6 @@ import org.ops4j.kaiserkai.rest.model.ApiErrors;
 
 
 @Provider
-@Dependent
 public class ResourceNotFoundExceptionMapper implements ExceptionMapper<ResourceNotFoundException> {
 
     @Override

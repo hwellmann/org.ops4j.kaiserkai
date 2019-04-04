@@ -33,7 +33,7 @@ import org.ops4j.kaiserkai.core.api.model.Digest;
 public class StoragePaths {
 
     @Inject
-    private RegistryConfiguration config;
+    RegistryConfiguration config;
 
     public File getVersionDir() {
         return new File(config.getRegistryRoot(), "docker/registry/v2");

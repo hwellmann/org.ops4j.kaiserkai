@@ -25,7 +25,7 @@ import org.ops4j.kaiserkai.rest.model.Tags;
 public class TagsResource {
 
     @Inject
-    private StoragePaths paths;
+    StoragePaths paths;
 
     @GET
     public Tags findTags(@PathParam("repository") String repository) {

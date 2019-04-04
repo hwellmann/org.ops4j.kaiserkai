@@ -24,7 +24,7 @@ import org.ops4j.kaiserkai.core.api.storage.file.StoragePaths;
 public class BlobResource {
 
     @Inject
-    private StoragePaths paths;
+    StoragePaths paths;
 
     @GET
     public Response findBlob(@PathParam("repository") String repository, @PathParam("digest") String digest) throws IOException {
