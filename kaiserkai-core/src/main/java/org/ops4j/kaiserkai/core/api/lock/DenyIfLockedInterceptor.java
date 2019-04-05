@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 OPS4J Contributors
+ * Copyright 2019 OPS4J Contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,31 +17,26 @@
  */
 package org.ops4j.kaiserkai.core.api.lock;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import javax.ws.rs.ForbiddenException;
 
-/**
- * Authorizer for the {@link DenyIfLocked} and {@link RequiresLock} security bindings.
- *
- * @author Harald Wellmann
- *
- */
-@ApplicationScoped
-public class LockAuthorizer {
+@Interceptor
+@DenyIfLocked
+public class DenyIfLockedInterceptor {
 
     @Inject
     LockManager lockManager;
 
-    //@Secures
-    @DenyIfLocked
-    public boolean doUnlessLocked(InvocationContext context) {
-        return !lockManager.isLocked();
-    }
-
-    //@Secures
-    @RequiresLock
-    public boolean lockAndDo(InvocationContext context) {
-        return lockManager.lock();
+    @AroundInvoke
+    public Object denyIfLocked(InvocationContext invocationContext) throws Exception {
+        if (!lockManager.isLocked()) {
+            return invocationContext.proceed();
+        }
+        else {
+            throw new ForbiddenException();
+        }
     }
 }

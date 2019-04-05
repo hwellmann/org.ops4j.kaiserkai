@@ -1,6 +1,6 @@
 package org.ops4j.kaiserkai.rest.api.impl;
 
-import javax.annotation.security.RolesAllowed;
+import javax.annotation.security.PermitAll;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 @ApplicationScoped
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
-@RolesAllowed("USER")
+@PermitAll
 public class VersionResource {
 
     @GET

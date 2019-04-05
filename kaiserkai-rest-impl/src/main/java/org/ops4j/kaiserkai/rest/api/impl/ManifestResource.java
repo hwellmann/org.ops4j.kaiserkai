@@ -29,7 +29,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.ops4j.kaiserkai.core.api.authz.PermissionsAllowed;
 import org.ops4j.kaiserkai.core.api.lock.DenyIfLocked;
 import org.ops4j.kaiserkai.core.api.storage.file.DigestBuilder;
 import org.ops4j.kaiserkai.core.api.storage.file.FileOperations;
@@ -76,7 +75,7 @@ public class ManifestResource {
     }
 
     @DELETE
-    @PermissionsAllowed("ADMIN")
+    @RolesAllowed("ADMIN")
     @DenyIfLocked
     public Response deleteManifest(@PathParam("repository") String repository, @PathParam("reference") String reference) {
 

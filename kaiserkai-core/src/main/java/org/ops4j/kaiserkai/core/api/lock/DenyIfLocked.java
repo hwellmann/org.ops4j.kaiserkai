@@ -25,6 +25,8 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import javax.interceptor.InterceptorBinding;
+
 /**
  * Methods annotated with this security binding will fail with an {@code AccessDeniedException} when the registry is
  * locked.
@@ -35,7 +37,7 @@ import java.lang.annotation.Target;
 @Retention(value = RUNTIME)
 @Target({ TYPE, METHOD })
 @Documented
-//@SecurityBindingType
+@InterceptorBinding
 public @interface DenyIfLocked {
 
 }
