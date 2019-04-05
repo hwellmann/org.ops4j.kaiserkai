@@ -23,7 +23,11 @@ import static org.ops4j.kaiserkai.core.api.storage.file.FileOperations.readTimes
 import static org.ops4j.kaiserkai.core.api.storage.file.FileOperations.toSubDirs;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -31,6 +35,8 @@ import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 
 import org.ops4j.kaiserkai.core.api.lock.LockManager;
 import org.ops4j.kaiserkai.core.api.model.Blob;
@@ -42,8 +48,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 
 /**
  * @author Harald Wellmann
@@ -108,10 +112,11 @@ public class GarbageCollectionService {
         File jobsDir = paths.getJobsDir();
         jobsDir.mkdirs();
         File jobResult = new File(jobsDir, result.getId());
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            objectMapper.writerFor(GarbageCollectionResult.class).writeValue(jobResult, result);
-        } catch (IOException exc) {
+        Jsonb jsonb = JsonbBuilder.create();
+        try (OutputStream os = new FileOutputStream(jobResult)) {
+            jsonb.toJson(result, os);
+        }
+        catch (IOException exc) {
             log.error("Error writing job result", exc);
         }
     }
@@ -122,12 +127,12 @@ public class GarbageCollectionService {
         if (!jobResult.exists()) {
             return null;
         }
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readerFor(GarbageCollectionResult.class).readValue(jobResult);
-        } catch (IOException exc) {
-            log.error("Error writing job result", exc);
+        Jsonb jsonb = JsonbBuilder.create();
+        try (InputStream is = new FileInputStream(jobResult)){
+            return jsonb.fromJson(is, GarbageCollectionResult.class);
+        }
+        catch (IOException exc) {
+            log.error("Error reading job result", exc);
         }
         return null;
     }
@@ -264,9 +269,9 @@ public class GarbageCollectionService {
         if (!blobData.exists()) {
             return;
         }
-        ObjectReader reader = new ObjectMapper().readerFor(Manifest.class);
-        try {
-            Manifest manifest = reader.readValue(blobData);
+        Jsonb jsonb = JsonbBuilder.create();
+        try (InputStream is = new FileInputStream(blobData)) {
+            Manifest manifest = jsonb.fromJson(is, Manifest.class);
             log.debug("Blob {} used by manifest of {}", manifest.getConfig().getDigest(), repoTag);
             manifest.getLayers().forEach(l -> log.debug("Blob {} used by layer of {}", l.getDigest(), repoTag));
 
