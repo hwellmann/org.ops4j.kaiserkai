@@ -97,4 +97,41 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>native</id>
+            <activation>
+                <property>
+                    <name>native</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.quarkus</groupId>
+                        <artifactId>quarkus-maven-plugin</artifactId>
+                        <version>${io.quarkus.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>native-image</goal>
+                                </goals>
+                                <configuration>                                    
+                                    <enableHttpUrlHandler>true</enableHttpUrlHandler>
+                                    <additionalBuildArgs>
+                                        <additionalBuildArg>-J-Xmx4g</additionalBuildArg>
+                                        <additionalBuildArg>-H:IncludeResources=application.properties</additionalBuildArg>
+                                        <additionalBuildArg>-H:IncludeResources=META-INF/microprofile-config.properties</additionalBuildArg>
+                                        <additionalBuildArg>-H:Log=registerResource:verbose</additionalBuildArg>
+                                    </additionalBuildArgs>                                    
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    
+
 </project>
