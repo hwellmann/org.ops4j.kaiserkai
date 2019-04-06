@@ -33,6 +33,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
@@ -40,8 +41,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
-import org.jboss.resteasy.client.jaxrs.BasicAuthentication;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.jboss.resteasy.client.jaxrs.internal.BasicAuthentication;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,7 +67,7 @@ public class UploadIT {
     public void init() {
         log.debug("registry URL = {}", REGISTRY_URL);
 
-        client = new ResteasyClientBuilder().connectionPoolSize(20).build();
+        client = ((ResteasyClientBuilder) ClientBuilder.newBuilder()).connectionPoolSize(20).build();
         client.register(LoggingResponseFilter.class);
         client.register(new BasicAuthentication("operator", "operator"));
 

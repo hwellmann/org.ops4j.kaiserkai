@@ -23,13 +23,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.jboss.resteasy.client.jaxrs.BasicAuthentication;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.jboss.resteasy.client.jaxrs.internal.BasicAuthentication;
 import org.ops4j.kaiserkai.core.api.model.GarbageCollectionResult;
 import org.ops4j.kaiserkai.rest.model.Catalog;
 import org.ops4j.kaiserkai.rest.model.Tags;
@@ -44,7 +45,7 @@ public class RegistryClient {
     private WebTarget entryPoint;
 
     public RegistryClient(String registryUrl, String username, String password) {
-        client = new ResteasyClientBuilder().connectionPoolSize(20).build();
+        client = ((ResteasyClientBuilder) ClientBuilder.newBuilder()).connectionPoolSize(20).build();
         client.register(LoggingResponseFilter.class);
         client.register(new BasicAuthentication(username, password));
 

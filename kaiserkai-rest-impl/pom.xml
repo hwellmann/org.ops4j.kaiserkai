@@ -22,15 +22,12 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-resteasy-jsonb</artifactId>
         </dependency>
+
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-elytron-security</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.quarkus.arc</groupId>
-            <artifactId>arc-processor</artifactId>
-            <scope>provided</scope>
-        </dependency>
+
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5</artifactId>
@@ -39,13 +36,7 @@
 
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jackson2-provider</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jaxrs</artifactId>
+            <artifactId>resteasy-json-binding-provider</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -58,25 +49,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.security.enterprise</groupId>
-            <artifactId>javax.security.enterprise-api</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <scope>provided</scope>
         </dependency>
 
     </dependencies>
@@ -116,14 +88,14 @@
                                 <goals>
                                     <goal>native-image</goal>
                                 </goals>
-                                <configuration>                                    
+                                <configuration>
                                     <enableHttpUrlHandler>true</enableHttpUrlHandler>
                                     <additionalBuildArgs>
                                         <additionalBuildArg>-J-Xmx4g</additionalBuildArg>
                                         <additionalBuildArg>-H:IncludeResources=application.properties</additionalBuildArg>
                                         <additionalBuildArg>-H:IncludeResources=META-INF/microprofile-config.properties</additionalBuildArg>
                                         <additionalBuildArg>-H:Log=registerResource:verbose</additionalBuildArg>
-                                    </additionalBuildArgs>                                    
+                                    </additionalBuildArgs>
                                 </configuration>
                             </execution>
                         </executions>
@@ -132,6 +104,6 @@
             </build>
         </profile>
     </profiles>
-    
+
 
 </project>

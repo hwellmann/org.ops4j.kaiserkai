@@ -16,7 +16,7 @@
         <ch.qos.logback.version>1.0.7</ch.qos.logback.version>
         <io.quarkus.version>0.12.0</io.quarkus.version>
         <org.apache.deltaspike.version>1.9.0</org.apache.deltaspike.version>
-        <org.jboss.resteasy.version>3.6.1.Final</org.jboss.resteasy.version>
+        <org.jboss.resteasy.version>4.0.0.Beta8</org.jboss.resteasy.version>
         <org.junit.jupiter.version>5.4.1</org.junit.jupiter.version>
         <org.junit.platform.version>1.4.1</org.junit.platform.version>
         <org.slf4j.version>1.7.7</org.slf4j.version>
@@ -59,10 +59,9 @@
             </dependency>
 
             <dependency>
-                <groupId>javax</groupId>
-                <artifactId>javaee-api</artifactId>
-                <version>8.0</version>
-                <scope>provided</scope>
+                <groupId>javax.annotation</groupId>
+                <artifactId>javax.annotation-api</artifactId>
+                <version>1.3.2</version>
             </dependency>
 
             <dependency>
@@ -97,7 +96,7 @@
 
             <dependency>
                 <groupId>org.jboss.resteasy</groupId>
-                <artifactId>resteasy-jackson2-provider</artifactId>
+                <artifactId>resteasy-json-binding-provider</artifactId>
                 <version>${org.jboss.resteasy.version}</version>
             </dependency>
 
