@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 OPS4J Contributors
+ * Copyright 2019 OPS4J Contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ops4j.kaiserkai.rest.model;
+package org.ops4j.kaiserkai.rest;
 
-/**
- * @author Harald Wellmann
- *
- */
-public enum ErrorCode {
-    DENIED,
-    MANIFEST_UNKNOWN,
-    NAME_UNKNOWN,
-    UNAUTHORIZED,
-    UNSUPPORTED
+import java.util.concurrent.TimeUnit;
+
+import org.junit.jupiter.api.Test;
+
+import io.quarkus.test.junit.QuarkusTest;
+
+@QuarkusTest
+public class KaiserkaiRunner {
+
+    @Test
+    public void testHelloEndpoint() throws InterruptedException {
+        Thread.sleep(TimeUnit.HOURS.toMillis(1));
+    }
+
 }
