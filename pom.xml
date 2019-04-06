@@ -33,7 +33,6 @@
         <module>kaiserkai-rest-impl</module>
         <module>kaiserkai-web</module>
         <module>kaiserkai-itest</module>
-        <module>kaiserkai-core</module>
     </modules>
 
     <dependencyManagement>
