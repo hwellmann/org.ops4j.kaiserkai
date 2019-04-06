@@ -66,6 +66,76 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <removeVolumes>true</removeVolumes>
+                    <images>
+                        <image>
+                            <alias>kaiserkai</alias>
+                            <name>ops4j/kaiserkai:%v</name>
+                            <build>
+                                <dockerFileDir>kaiserkai</dockerFileDir>
+                                <assembly>
+                                    <inline xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2">                                        
+                                        <files>
+                                            <file>
+                                                <source>${project.build.directory}/${project.artifactId}-${project.version}-runner.jar</source>
+                                                <outputDirectory>jar</outputDirectory>
+                                                <destName>runner.jar</destName>
+                                            </file>
+                                        </files>
+                                        <fileSets>
+                                            <fileSet>
+                                                <directory>${project.build.directory}/lib</directory>
+                                                <outputDirectory>jar/lib</outputDirectory>
+                                            </fileSet>
+                                        </fileSets>
+                                    </inline>
+                                </assembly>
+                                <nocache>true</nocache>
+                            </build>
+                        </image>
+<!--                         <image> -->
+<!--                             <alias>kaiserkai-native</alias> -->
+<!--                             <name>ops4j/kaiserkai-native:%v</name> -->
+<!--                             <build> -->
+<!--                                 <dockerFileDir>kaiserkai-native</dockerFileDir> -->
+<!--                                 <assembly> -->
+<!--                                     <inline xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"> -->
+<!--                                         <files> -->
+<!--                                             <file> -->
+<!--                                                 <source>${project.build.directory}/${project.artifactId}-${project.version}-runner</source> -->
+<!--                                                 <outputDirectory>native</outputDirectory> -->
+<!--                                                 <destName>runner</destName> -->
+<!--                                             </file> -->
+<!--                                         </files> -->
+<!--                                     </inline> -->
+<!--                                 </assembly> -->
+<!--                                 <nocache>true</nocache> -->
+<!--                             </build> -->
+<!--                         </image> -->
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>build</id>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                    <execution>
+                        <id>push</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>push</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+                    
         </plugins>
     </build>
 

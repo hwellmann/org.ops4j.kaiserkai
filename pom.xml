@@ -31,7 +31,6 @@
 
     <modules>
         <module>kaiserkai-rest-impl</module>
-        <module>kaiserkai-web</module>
         <module>kaiserkai-itest</module>
     </modules>
 
@@ -47,6 +46,19 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-core</artifactId>
                 <version>${ch.qos.logback.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-client</artifactId>
+                <version>8.11.2</version>
+                <classifier>shaded</classifier>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -193,6 +205,9 @@
                     <version>3.0.0-M3</version>
                     <configuration>
                         <argLine>${jacoco.argLine}</argLine>
+                        <systemProperties>
+                            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                        </systemProperties>
                     </configuration>
                 </plugin>
                 <plugin>
