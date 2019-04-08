@@ -26,22 +26,6 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
     @ConfigProperty(name = "kaiserkai.fs.root", defaultValue = "")
     String registryRoot;
 
-    @Inject
-    @ConfigProperty(name = "kaiserkai.auth.operator.name", defaultValue = "operator")
-    String operatorName;
-
-    @Inject
-    @ConfigProperty(name = "kaiserkai.auth.operator.digest", defaultValue = "sha256:1e54dae5e77cea8d5be042243b0137e63b7c27625fe3e84717e645237589914c")
-    String operatorDigest;
-
-    @Inject
-    @ConfigProperty(name = "kaiserkai.auth.admin.name", defaultValue = "admin")
-    String adminName;
-
-    @Inject
-    @ConfigProperty(name = "kaiserkai.auth.admin.digest", defaultValue = "sha256:8da193366e1554c08b2870c50f737b9587c3372b656151c4a96028af26f51334")
-    String adminDigest;
-
     @PostConstruct
     void init() {
         if (registryRoot.isEmpty()) {
@@ -53,44 +37,10 @@ public class RegistryConfigurationImpl implements RegistryConfiguration {
 
         log.info("=== Docker Registry Configuration:");
         log.info("    registryRoot = {}", registryRoot);
-        log.info("    operatorName = {}", operatorName);
-        log.info("    adminName    = {}", adminName);
     }
 
     @Override
     public File getRegistryRoot() {
         return new File(registryRoot);
-    }
-
-    /**
-     * @return the operatorName
-     */
-    @Override
-    public String getOperatorName() {
-        return operatorName;
-    }
-
-    /**
-     * @return the operatorDigest
-     */
-    @Override
-    public String getOperatorDigest() {
-        return operatorDigest;
-    }
-
-    /**
-     * @return the adminName
-     */
-    @Override
-    public String getAdminName() {
-        return adminName;
-    }
-
-    /**
-     * @return the adminDigest
-     */
-    @Override
-    public String getAdminDigest() {
-        return adminDigest;
     }
 }

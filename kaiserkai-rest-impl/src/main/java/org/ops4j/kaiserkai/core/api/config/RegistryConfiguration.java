@@ -27,24 +27,4 @@ public interface RegistryConfiguration {
 
     File getRegistryRoot();
 
-    /**
-     * @return the operatorName
-     */
-    String getOperatorName();
-
-    /**
-     * @return the operatorDigest
-     */
-    String getOperatorDigest();
-
-    /**
-     * @return the adminName
-     */
-    String getAdminName();
-
-    /**
-     * @return the adminDigest
-     */
-    String getAdminDigest();
-
 }
