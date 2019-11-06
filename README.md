@@ -17,7 +17,6 @@ registry.
 The REST API is extended with a new `POST /_gc` method which performs garbage collection
 without shutdown, only locking the registry for push operations.
 
-
 ## Build from Source
 
 ### Prerequisites
