@@ -17,7 +17,7 @@
         <ch.qos.logback.version>1.0.7</ch.qos.logback.version>
         <io.thorntail.version>2.4.0.Final</io.thorntail.version>
         <org.apache.deltaspike.version>1.9.0</org.apache.deltaspike.version>
-        <org.jboss.resteasy.version>3.6.1.Final</org.jboss.resteasy.version>
+        <org.jboss.resteasy.version>3.14.0.Final</org.jboss.resteasy.version>
         <org.junit.jupiter.version>5.4.0-M1</org.junit.jupiter.version>
         <org.junit.platform.version>1.4.0-M1</org.junit.platform.version>
         <org.slf4j.version>1.7.7</org.slf4j.version>
